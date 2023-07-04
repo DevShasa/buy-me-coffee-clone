@@ -13,7 +13,7 @@ export default function Home() {
 
   async function handleCheckout(){
     setError(null)
-    const responce = await fetch(`/api/checkout`, {
+    const response = await fetch(`/api/checkout`, {
       method :"POST",
       headers:{
         'Content-Type':'application/json'
@@ -25,7 +25,7 @@ export default function Home() {
       })
     })
 
-    const res = await responce.json()
+    const res = await response.json()
 
     if(res.url){
       router.push(res.url)
