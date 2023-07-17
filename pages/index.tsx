@@ -37,6 +37,7 @@ export default function Home() {
   }
 
 	return (
+    // double container pattern in tailwind, for future reference
 		<main className={"flex max-w-2xl mx-auto"}>
 			<div className={"flex-1"}>
         <h2>Previous donations</h2>
