@@ -2,7 +2,11 @@ import { useState } from "react";
 import { PRICE_OF_A_BEER_IN_CENTS, MAXIMUM_DONATION_IN_CENTS } from "@/config";
 import Image from "next/image";
 import { useRouter } from "next/router";
-export default function Home() {
+import { GetServerSideProps } from "next";
+import  {Record} from "../types"
+
+
+export default function Home({donations}:{donations:Array<Record>}) {
   const router = useRouter()
 	const [beerQuantity, setbeerQuantity] = useState(1);
 	const [name, setName] = useState("");
@@ -38,9 +42,18 @@ export default function Home() {
 
 	return (
     // double container pattern in tailwind, for future reference
-		<main className={"flex max-w-2xl mx-auto"}>
-			<div className={"flex-1"}>
+		<main className={"flex max-w-2xl mx-auto mt-6"}>
+			<div className={"flex-1 p-2"}>
         <h2>Previous donations</h2>
+        {donations.map((item)=>{
+          return(
+            <div key={item.id} className={`p-4 shadow mb-2`}>
+              {item.fields.name} donated {item.fields.ammount}
+              <br/>
+              {item.fields.message}
+            </div>
+          )
+        })}
       </div>
 			<div>
 				<h1>Buy me a beer</h1>
@@ -103,4 +116,20 @@ export default function Home() {
 			</div>
 		</main>
 	);
+}
+
+
+export const getServerSideProps:GetServerSideProps = async (context) =>{
+
+  const protocol = context.req.headers['x-forwarded-proto'] || "http"
+  const host = context.req.headers.host
+  const response = await  fetch(`${protocol}://${host}/api/donations`)
+  const donations = await response.json()
+  console.log("THESE ARE THE DONATIONS",donations)
+
+  return {
+    props:{
+      donations
+    }
+  }
 }
